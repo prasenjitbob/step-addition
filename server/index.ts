@@ -1,13 +1,22 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import pgPromise from "pg-promise";
+
+interface Step {
+  carryString: string;
+  sumString: string;
+}
+
+interface Steps {
+  [step: string]: Step;
+}
 
 dotenv.config();
 
 const pgp = pgPromise();
 
-const db = pgp(process.env.PG_DB_URL); // Update with your PostgreSQL database details
+const db = pgp(process.env.PG_DB_URL!); // Update with your PostgreSQL database details
 
 const app = express();
 const port = 5000;
@@ -31,8 +40,8 @@ app.post("/api/steps", (req, res) => {
 });
 
 // Generate the step-by-step addition process
-function generateSteps(num1, num2) {
-  const steps = {};
+function generateSteps(num1: number, num2: number): Steps {
+  const steps: Steps = {};
 
   let carry = 0;
   let step = 1;
@@ -73,10 +82,10 @@ function generateSteps(num1, num2) {
 }
 
 // Save steps to the database
-app.post("/api/saveToDb", async (req, res) => {
+app.post("/api/saveToDb", async (req: Request, res: Response) => {
   const { num1, num2, steps } = req.body;
   try {
-    const stepData = Object.values(steps).map((step) => [
+    const stepData = Object.values(steps).map((step: any) => [
       step.carryString,
       step.sumString,
     ]);
@@ -92,11 +101,11 @@ app.post("/api/saveToDb", async (req, res) => {
   }
 });
 
-app.get("/api/results", async (req, res) => {
+app.get("/api/results", async (req: Request, res: Response) => {
   const { page = 1, limit = 10 } = req.query;
 
   try {
-    const offset = (page - 1) * limit;
+    const offset = (Number(page) - 1) * Number(limit);
 
     const results = await db.any(
       "SELECT num1, num2, steps FROM step_results ORDER BY created_at DESC OFFSET $1 LIMIT $2",
@@ -104,10 +113,10 @@ app.get("/api/results", async (req, res) => {
     );
 
     const totalResults = await db.one("SELECT COUNT(*) FROM step_results");
-    const totalPages = Math.ceil(totalResults.count / limit);
+    const totalPages = Math.ceil(totalResults.count / +limit);
 
     const formattedResults = results.map((result) => {
-      const formattedSteps = result.steps.reduce((acc, step, index) => {
+      const formattedSteps = result.steps.reduce((acc: Steps, step: any[], index: number) => {
         const stepKey = `step${index + 1}`;
         acc[stepKey] = {
           carryString: step[0],

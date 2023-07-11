@@ -2,11 +2,10 @@
   "name": "step-addition-backend",
   "version": "1.0.0",
   "description": "",
-  "type": "module",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js",
+    "start": "node index.ts",
+    "dev": "ts-node-dev --pretty --transpile-only index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -19,5 +18,11 @@
     "express": "^4.18.2",
     "nodemon": "^3.0.1",
     "pg-promise": "^11.5.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.13",
+    "@types/express": "^4.17.17",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.1.6"
   }
 }
