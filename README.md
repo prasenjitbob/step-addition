@@ -22,7 +22,7 @@
 # Next steps
 1. Copy your postgres credentials like db_name, username and password.
 2. Paste those credentials in .env file which is there in server directory (check example.env for reference).
-3. Login to PG CLI and create a table in the db using the below command: 
+3. Login to PG CLI and create a table in the db using the below command or check "createTable.txt" file for the code: 
     CREATE TABLE step_results (
         id SERIAL PRIMARY KEY,
         num1 INTEGER NOT NULL,

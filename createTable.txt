@@ -1,0 +1,7 @@
+CREATE TABLE step_results (
+    id SERIAL PRIMARY KEY,
+    num1 INTEGER NOT NULL,
+    num2 INTEGER NOT NULL,
+    steps JSONB NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
+)
